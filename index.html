@@ -1,99 +1,144 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>カーセブンいわき店 査定依頼フォーム</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-    input, textarea, select { width: 100%; padding: 8px; margin: 8px 0; }
-    button { padding: 10px 20px; }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #fff8e1;
+      color: #333;
+    }
+    h1 {
+      color: #d32f2f;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #d32f2f;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #b71c1c;
+    }
+    .logo {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+    .pdf-frame {
+      margin-top: 40px;
+      border: 2px solid #ccc;
+    }
   </style>
 </head>
 <body>
-  <h1>査定依頼フォーム</h1>
+
+  <img src="カーセブンのロゴ.png" alt="カーセブンロゴ" class="logo">
+  <h1>カーセブンいわき店 査定依頼フォーム</h1>
+
   <form id="sateiForm">
-    <label>お名前</label>
-    <input type="text" name="name" required />
+    <label>お名前（必須）</label>
+    <input type="text" name="name" required>
 
-    <label>電話番号</label>
-    <input type="tel" name="phone" required />
+    <label>電話番号（必須）</label>
+    <input type="tel" name="phone" required>
 
-    <label>車種</label>
-    <input type="text" name="car" required />
+    <label>車種（必須）</label>
+    <input type="text" name="car" required>
 
-    <!-- 希望日時選択 1 -->
-    <label>希望日時 1</label>
-    <input type="date" name="date1" required />
-    <select name="time1" required></select>
+    <label>希望日時①（必須）</label>
+    <input type="date" name="date1" required>
+    <select name="time1" required>
+      <option value="">-- 時間を選択 --</option>
+      <option>10:00</option>
+      <option>11:00</option>
+      <option>13:00</option>
+      <option>14:00</option>
+      <option>15:00</option>
+    </select>
 
-    <!-- 希望日時選択 2 -->
-    <label>希望日時 2</label>
-    <input type="date" name="date2" required />
-    <select name="time2" required></select>
+    <label>希望日時②（任意）</label>
+    <input type="date" name="date2">
+    <select name="time2">
+      <option value="">-- 時間を選択 --</option>
+      <option>10:00</option>
+      <option>11:00</option>
+      <option>13:00</option>
+      <option>14:00</option>
+      <option>15:00</option>
+    </select>
 
-    <!-- 希望日時選択 3 -->
-    <label>希望日時 3</label>
-    <input type="date" name="date3" required />
-    <select name="time3" required></select>
+    <label>希望日時③（任意）</label>
+    <input type="date" name="date3">
+    <select name="time3">
+      <option value="">-- 時間を選択 --</option>
+      <option>10:00</option>
+      <option>11:00</option>
+      <option>13:00</option>
+      <option>14:00</option>
+      <option>15:00</option>
+    </select>
 
-    <label>その他ご要望</label>
-    <textarea name="other"></textarea>
+    <label>その他ご要望（任意）</label>
+    <textarea name="other" rows="4"></textarea>
 
     <button type="submit">送信する</button>
   </form>
 
-  <p id="result"></p>
+  <iframe src="安心宣言Ver3.0.pdf" width="100%" height="600px" class="pdf-frame"></iframe>
 
   <script>
-    // 30分単位の時間を作成（10:00〜18:30）
-    const times = [];
-    for (let h = 10; h <= 18; h++) {
-      for (let m of [0, 30]) {
-        if (h === 18 && m > 30) continue;
-        const hour = ('0' + h).slice(-2);
-        const minute = ('0' + m).slice(-2);
-        times.push(`${hour}:${minute}`);
-      }
-    }
-
-    // 各時間セレクトに選択肢を追加
-    ['time1', 'time2', 'time3'].forEach(id => {
-      const select = document.getElementsByName(id)[0];
-      times.forEach(t => {
-        const option = document.createElement('option');
-        option.value = t;
-        option.textContent = t;
-        select.appendChild(option);
-      });
-    });
-
-    const form = document.getElementById('sateiForm');
-    form.addEventListener('submit', e => {
+    document.getElementById('sateiForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const formData = new FormData(form);
-      const data = {};
-      formData.forEach((value, key) => (data[key] = value));
 
-      // 日付チェック（水曜不可）
-      const isWednesday = d => new Date(d).getDay() === 3;
-      if (isWednesday(data.date1) || isWednesday(data.date2) || isWednesday(data.date3)) {
-        alert('希望日は水曜日以外を選択してください。');
-        return;
-      }
+      const form = e.target;
+      const data = {
+        name: form.name.value,
+        phone: form.phone.value,
+        car: form.car.value,
+        date1: form.date1.value,
+        time1: form.time1.value,
+        date2: form.date2.value,
+        time2: form.time2.value,
+        date3: form.date3.value,
+        time3: form.time3.value,
+        other: form.other.value
+      };
 
-      // 送信処理（Google Apps Script連携URLをここに設定）
-      fetch('https://script.google.com/macros/s/AKfycbxV9YfU6lh0hBTacbpR-41w9nnmUUtPD0hmmlwxDfJcUDpLKRpRvoAkHab8g7Pmb1okMg/exec', {
+      fetch('https://script.google.com/macros/s/あなたのGASデプロイURL/exec', {
         method: 'POST',
         body: JSON.stringify(data)
       })
-      .then(res => res.text())
-      .then(txt => {
-        form.reset();
-        document.getElementById('result').innerText = '送信が完了しました！ありがとうございます。';
+      .then(res => res.json())
+      .then(res => {
+        if (res.result === 'success') {
+          alert("ありがとうございます！受付が完了いたしました。営業時間内に店舗よりご連絡をさせていただきますので、しばらくお待ちください。");
+          form.reset();
+        } else {
+          alert("送信に失敗しました。");
+        }
       })
-      .catch(err => alert('送信に失敗しました。'));
+      .catch(() => {
+        alert("送信に失敗しました。");
+      });
     });
   </script>
+
 </body>
 </html>
