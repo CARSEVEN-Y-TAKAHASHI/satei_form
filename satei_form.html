@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>カーセブンいわき店 査定依頼フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    input, textarea, select { width: 100%; padding: 8px; margin: 8px 0; }
+    button { padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h1>査定依頼フォーム</h1>
+  <form id="sateiForm">
+    <label>お名前</label>
+    <input type="text" name="name" required />
+
+    <label>電話番号</label>
+    <input type="tel" name="phone" required />
+
+    <label>車種</label>
+    <input type="text" name="car" required />
+
+    <!-- 希望日時選択 1 -->
+    <label>希望日時 1</label>
+    <input type="date" name="date1" required />
+    <select name="time1" required></select>
+
+    <!-- 希望日時選択 2 -->
+    <label>希望日時 2</label>
+    <input type="date" name="date2" required />
+    <select name="time2" required></select>
+
+    <!-- 希望日時選択 3 -->
+    <label>希望日時 3</label>
+    <input type="date" name="date3" required />
+    <select name="time3" required></select>
+
+    <label>その他ご要望</label>
+    <textarea name="other"></textarea>
+
+    <button type="submit">送信する</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    // 30分単位の時間を作成（10:00〜18:30）
+    const times = [];
+    for (let h = 10; h <= 18; h++) {
+      for (let m of [0, 30]) {
+        if (h === 18 && m > 30) continue;
+        const hour = ('0' + h).slice(-2);
+        const minute = ('0' + m).slice(-2);
+        times.push(`${hour}:${minute}`);
+      }
+    }
+
+    // 各時間セレクトに選択肢を追加
+    ['time1', 'time2', 'time3'].forEach(id => {
+      const select = document.getElementsByName(id)[0];
+      times.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t;
+        option.textContent = t;
+        select.appendChild(option);
+      });
+    });
+
+    const form = document.getElementById('sateiForm');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => (data[key] = value));
+
+      // 日付チェック（水曜不可）
+      const isWednesday = d => new Date(d).getDay() === 3;
+      if (isWednesday(data.date1) || isWednesday(data.date2) || isWednesday(data.date3)) {
+        alert('希望日は水曜日以外を選択してください。');
+        return;
+      }
+
+      // 送信処理（Google Apps Script連携URLをここに設定）
+      fetch('https://script.google.com/a/macros/carseven.jp/s/AKfycbxZCRf7sHuW7J4n9eYig73AZm-x3YfQWSu_hLDzMuWLSuj6WTDE7lerlFHAlWmNgQQIZA/exec', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(txt => {
+        form.reset();
+        document.getElementById('result').innerText = '送信が完了しました！ありがとうございます。';
+      })
+      .catch(err => alert('送信に失敗しました。'));
+    });
+  </script>
+</body>
+</html>
