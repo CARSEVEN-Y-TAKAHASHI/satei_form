@@ -157,14 +157,14 @@
         time3: form.time3.value,
         other: form.other.value
       };
+fetch('https://script.google.com/macros/s/AKfycbyjmXOlYzCIy0OyF7gmFEguf3AOMtyGUevU4PPo880y8omtM-vLojqz3wqbIckggDcQGw/exec', {
+  method: 'POST',
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ contents: data })
+})
 
-      fetch('https://script.google.com/macros/s/AKfycbzQ7lBru0Sl211ImjcmA7NxAuSEm9tIcWBP6-RuF8jzhGQlAK3Xkp8L9vc8xoDYRGgMlQ/exec', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ contents: data })
-      })
       .then(res => res.json())
       .then(res => {
         if (res.result === 'success') {
