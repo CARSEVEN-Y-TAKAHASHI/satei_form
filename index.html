@@ -1,79 +1,39 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>カーセブンいわき店 査定依頼フォーム</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  <h1>カーセブンいわき店 査定依頼フォーム</h1>
+<script>
+  document.getElementById('sateiForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-  <form id="sateiForm">
-    <label>お名前（必須）</label><br>
-    <input type="text" name="name" required><br>
+    const form = e.target;
+    const data = {
+      name: form.name.value,
+      phone: form.phone.value,
+      car: form.car.value,
+      date1: form.date1.value,
+      time1: form.time1.value,
+      date2: form.date2.value,
+      time2: form.time2.value,
+      date3: form.date3.value,
+      time3: form.time3.value,
+      other: form.other.value
+    };
 
-    <label>電話番号（必須）</label><br>
-    <input type="tel" name="phone" required><br>
-
-    <label>車種（必須）</label><br>
-    <input type="text" name="car" required><br>
-
-    <label>希望日時①（必須）</label><br>
-    <input type="date" name="date1" required>
-    <input type="time" name="time1" required><br>
-
-    <label>希望日時②（任意）</label><br>
-    <input type="date" name="date2">
-    <input type="time" name="time2"><br>
-
-    <label>希望日時③（任意）</label><br>
-    <input type="date" name="date3">
-    <input type="time" name="time3"><br>
-
-    <label>その他ご要望（任意）</label><br>
-    <textarea name="other" rows="4"></textarea><br>
-
-    <button type="submit">送信する</button>
-  </form>
-
-  <script>
-    document.getElementById('sateiForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const form = e.target;
-      const data = {
-        name: form.name.value,
-        phone: form.phone.value,
-        car: form.car.value,
-        date1: form.date1.value,
-        time1: form.time1.value,
-        date2: form.date2.value,
-        time2: form.time2.value,
-        date3: form.date3.value,
-        time3: form.time3.value,
-        other: form.other.value
-      };
-
-      fetch('https://script.google.com/macros/s/AKfycbyjmXOlYzCIy0OyF7gmFEguf3AOMtyGUevU4PPo880y8omtM-vLojqz3wqbIckggDcQGw/exec', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ contents: data })
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.result === 'success') {
-          alert("ありがとうございます！受付が完了しました。");
-          form.reset();
-        } else {
-          alert("送信に失敗しました。");
-        }
-      })
-      .catch(() => {
+    fetch('https://script.google.com/macros/s/AKfycbyHlAM1fR56t6-0BOguWRX1PIcGXReMsnwnRpE3rKDFClhHSMbiguhcjP-YV6uMV-nJUw/exec', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.result === 'success') {
+        alert("ありがとうございます！受付が完了いたしました。営業時間内に店舗よりご連絡をさせていただきますので、しばらくお待ちください。");
+        form.reset();
+      } else {
         alert("送信に失敗しました。");
-      });
+      }
+    })
+    .catch(() => {
+      alert("送信に失敗しました。");
     });
-  </script>
-</body>
-</html>
+  });
+</script>
