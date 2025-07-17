@@ -16,12 +16,14 @@
       other: form.other.value
     };
 
-    fetch('https://script.google.com/macros/s/AKfycbyuZP-f03CXNtuHmeCTIY2U_uYNdZlpuBVTd2qeWih2xtQ19ZN_UeIOg1b7kuN5qbcw/exec', {
+   fetch('https://script.google.com/macros/s/NEW_DEPLOY_URL_HERE/exec', {
   method: 'POST',
   headers: {
     "Content-Type": "application/json"
   },
   body: JSON.stringify(data)
+})
+
 })
 
     })
